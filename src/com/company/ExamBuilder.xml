@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Exams>
+    <Details>
+        <id>0</id>
+        <question>True/False: The base 2 logarithm of 100 is 2</question>
+        <option>True</option>
+        <option>False</option>
+        <answer>FALSE</answer>
+    </Details>
+    <Details>
+        <id>1</id>
+        <question>Big O notation tells</question>
+        <option>how the speed of an algorithm relates to the number of items.</option>
+        <option>the running time of an algorithm for a given size data structure.</option>
+        <option>the running time of an algorithm for a given number of items.</option>
+        <option>how the size of a data structure relates to the number of items.</option>
+        <answer>A</answer>
+    </Details>
+</Exams>
