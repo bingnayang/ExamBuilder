@@ -49,4 +49,10 @@ public class Exam {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
+    @Override
+    public String toString(){
+        return id+") "+question;
+    }
+
 }
