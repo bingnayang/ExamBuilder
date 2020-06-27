@@ -1,5 +1,10 @@
 package com.company;
 
+
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Font;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -11,11 +16,12 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
@@ -37,7 +43,8 @@ public class Main {
 //            startingMenu();
 //            addExamQuestion();
             parseXMLtoObject(examsList);
-            printQuestionToConsole(examsList);
+//            printQuestionToConsole(examsList);
+            writeExamToPDF();
 
 
         } catch (Exception e) {
@@ -142,40 +149,63 @@ public class Main {
         // Get Document Builder
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder;
-        try{
+        try {
             documentBuilder = factory.newDocumentBuilder();
             Document document = documentBuilder.parse(xmlFile);
 //            List<Exam> examsList = new ArrayList<>();
             NodeList nodeList = document.getElementsByTagName("Details");
             NodeList nOptionList = null;
 
-            for(int i=0; i<nodeList.getLength(); i++){
+            for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
-                if(node.getNodeType() == Node.ELEMENT_NODE){
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
                     Integer id = Integer.parseInt(element.getElementsByTagName("id").item(0).getChildNodes().item(0).getNodeValue());
                     String question = element.getElementsByTagName("question").item(0).getChildNodes().item(0).getNodeValue();
                     nOptionList = element.getElementsByTagName("option");
                     // By placing here, option list is fresh every time get a new element
                     options = new ArrayList<>();
-                    for(int j=0; j<nOptionList.getLength(); j++){
+                    for (int j = 0; j < nOptionList.getLength(); j++) {
                         options.add(String.valueOf(nOptionList.item(j).getTextContent()));
                     }
-                    String answer =  element.getElementsByTagName("answer").item(0).getChildNodes().item(0).getNodeValue();
+                    String answer = element.getElementsByTagName("answer").item(0).getChildNodes().item(0).getNodeValue();
 
-                    exams.add(new Exam(id,question,options,answer));
+                    exams.add(new Exam(id, question, options, answer));
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // Testing
     public static void printQuestionToConsole(List<Exam> exams) {
-        for(Exam quiz : exams){
+        for (Exam quiz : exams) {
             System.out.println(quiz.toString());
         }
+    }
 
+    public static void writeExamToPDF() {
+        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/Exam.pdf";
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+            // Open
+            document.open();
+
+            Font f = new Font();
+            f.setStyle(Font.BOLD);
+            f.setSize(8);
+
+            document.add(new Paragraph("This is my paragraph 3", f));
+
+            // Close
+            document.close();
+            System.out.println("exam created");
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     public static void startingMenu() {
