@@ -1,9 +1,11 @@
 package com.company;
 
 
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,7 +18,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class Main {
 //            addExamQuestion();
             parseXMLtoObject(examsList);
 //            printQuestionToConsole(examsList);
-            writeExamToPDF();
+            writeExamToPDF(examsList);
 
 
         } catch (Exception e) {
@@ -185,7 +186,7 @@ public class Main {
         }
     }
 
-    public static void writeExamToPDF() {
+    public static void writeExamToPDF(List<Exam> exams) {
         String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/Exam.pdf";
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
 
@@ -194,11 +195,36 @@ public class Main {
             // Open
             document.open();
 
-            Font f = new Font();
-            f.setStyle(Font.BOLD);
-            f.setSize(8);
+            Font titleFront = new Font();
+            titleFront.setStyle(Font.BOLD);
+            titleFront.setSize(20);
 
-            document.add(new Paragraph("This is my paragraph 3", f));
+            // Create Exam Title
+            Paragraph examTitle = new Paragraph("Java Exam",titleFront);
+            examTitle.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            examTitle.setSpacingAfter(20f);
+            document.add(examTitle);
+            // Create Name, Date, Student_Id
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.addCell(getCell("Name:__________________", PdfPCell.ALIGN_LEFT));
+            table.addCell(getCell("Date:_____________", PdfPCell.ALIGN_CENTER));
+            table.addCell(getCell("Student_ID:_______________", PdfPCell.ALIGN_RIGHT));
+            document.add(table);
+            // Print questions and answer options
+            Paragraph examList = new Paragraph();
+            for(Exam list: exams){
+                examList.add(new Paragraph(list.getId()+") "+list.getQuestion()));
+                char option = 'a';
+                for(int i=0; i<list.getOption().size();i++){
+                    examList.add("["+option+"] "+list.getOption().get(i)+"\n");
+                    option++;
+                }
+            }
+            examList.setSpacingBefore(20);
+            document.add(examList);
+
+            
 
             // Close
             document.close();
@@ -206,6 +232,13 @@ public class Main {
         } catch (Exception e) {
             e.getMessage();
         }
+    }
+    public static PdfPCell getCell(String text, int alignment) {
+        PdfPCell cell = new PdfPCell(new Phrase(text));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        return cell;
     }
 
     public static void startingMenu() {

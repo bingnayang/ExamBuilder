@@ -52,7 +52,7 @@ public class Exam {
 
     @Override
     public String toString(){
-        return id+") "+question;
+        return question;
     }
 
 }
