@@ -75,7 +75,7 @@ public class Main {
         }
     }
 
-    public static void addQuestionDataToXML(String questionInput, List<String> optionInput, String answerInput) {
+    public static void addDataToXML(String questionInput, List<String> optionInput, String answerInput) {
 
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -140,7 +140,7 @@ public class Main {
         String answer = scanner.next();
 
         // Add exam question, option, and answer to XML file
-        addQuestionDataToXML(question, optionList, answer);
+        addDataToXML(question, optionList, answer);
     }
 
     public static void parseXMLtoObject(List<Exam> exams) {
@@ -212,19 +212,15 @@ public class Main {
             table.addCell(getCell("Student_ID:_______________", PdfPCell.ALIGN_RIGHT));
             document.add(table);
             // Print questions and answer options
-            Paragraph examList = new Paragraph();
-            for(Exam list: exams){
-                examList.add(new Paragraph(list.getId()+") "+list.getQuestion()));
+            for(Exam list:exams){
+                document.add(new Paragraph(list.getId()+") "+list.getQuestion()));
                 char option = 'a';
                 for(int i=0; i<list.getOption().size();i++){
-                    examList.add("["+option+"] "+list.getOption().get(i)+"\n");
+                    document.add(new Paragraph("["+option+"] "+list.getOption().get(i)+"\n"));
                     option++;
                 }
+                document.add(Chunk.NEWLINE);
             }
-            examList.setSpacingBefore(20);
-            document.add(examList);
-
-            
 
             // Close
             document.close();
