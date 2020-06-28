@@ -31,9 +31,9 @@ public class Main {
         try {
             // Check if ExamBuilder.xml file existed, if not create the xml file
             File fileTesting = new File(filePath);
-
             if (fileTesting.exists()) {
 //                System.out.println("XML file already exist");
+                parseXMLtoObject(examsList);
                 startingMenu();
                 int selectMenu = scanner.nextInt();
                 switch (selectMenu){
@@ -49,10 +49,11 @@ public class Main {
                         break;
                     case 3:
                         System.out.println("3. Print Exam to PDF File");
-                        writeExamToPDF(examsList);
+                        printExamToPDF(examsList);
                         break;
                     case 4:
-                        System.out.println("4. Print Exam Questions with Answer to PDF File");
+                        System.out.println("4. Print Exam Questions and Answer to PDF File");
+                        printExamAndAnswerToPDF(examsList);
                         break;
                     default:
                         System.out.println("Not an option");
@@ -63,7 +64,6 @@ public class Main {
                 createXMLFile();
                 System.out.println("ExamBuilder XML file successfully created");
             }
-//            parseXMLtoObject(examsList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,7 +221,7 @@ public class Main {
         }
     }
 
-    public static void writeExamToPDF(List<Exam> exams) {
+    public static void printExamToPDF(List<Exam> exams) {
         String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/Exam.pdf";
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
 
@@ -264,12 +264,52 @@ public class Main {
             e.getMessage();
         }
     }
+
     public static PdfPCell getCell(String text, int alignment) {
         PdfPCell cell = new PdfPCell(new Phrase(text));
         cell.setPadding(0);
         cell.setHorizontalAlignment(alignment);
         cell.setBorder(PdfPCell.NO_BORDER);
         return cell;
+    }
+
+    public static void printExamAndAnswerToPDF(List<Exam> exams){
+        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/ExamAnswer.pdf";
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(dest));
+            // Open
+            document.open();
+
+            Font titleFront = new Font();
+            titleFront.setStyle(Font.BOLD);
+            titleFront.setSize(20);
+
+            // Create Exam Title
+            Paragraph examTitle = new Paragraph("Java Exam and Answer",titleFront);
+            examTitle.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            examTitle.setSpacingAfter(20f);
+            document.add(examTitle);
+
+            // Print questions and answer
+            for(Exam list:exams){
+                document.add(new Paragraph(list.getId()+") "+list.getQuestion()));
+                char option = 'a';
+                for(int i=0; i<list.getOption().size();i++){
+                    document.add(new Paragraph("["+option+"] "+list.getOption().get(i)+"\n"));
+                    option++;
+                }
+                document.add(new Paragraph("Answer: "+list.getAnswer()));
+                document.add(Chunk.NEWLINE);
+            }
+
+            // Close
+            document.close();
+            System.out.println("Exam Answer PDF File Created");
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     public static void startingMenu() {
