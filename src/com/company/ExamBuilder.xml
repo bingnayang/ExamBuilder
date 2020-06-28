@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Exams>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Exams>
     <Details>
         <id>1</id>
         <question>True/False: The base 2 logarithm of 100 is 2</question>
@@ -25,4 +24,5 @@
         <option>13</option>
         <answer>B</answer>
     </Details>
+    
 </Exams>

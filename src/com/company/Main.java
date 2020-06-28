@@ -23,14 +23,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    static Scanner scanner = new Scanner(System.in);
+//    static Scanner scanner = new Scanner(System.in);
     static String filePath = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/ExamBuilder.xml";
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         List<Exam> examsList = new ArrayList<>();
         try {
             // Check if ExamBuilder.xml file existed, if not create the xml file
             File fileTesting = new File(filePath);
+
             if (fileTesting.exists()) {
 //                System.out.println("XML file already exist");
                 parseXMLtoObject(examsList);
@@ -55,6 +57,9 @@ public class Main {
                         System.out.println("4. Print Exam Questions and Answer to PDF File");
                         printExamAndAnswerToPDF(examsList);
                         break;
+                    case 5:
+                        System.out.println("Exit");
+                        break;
                     default:
                         System.out.println("Not an option");
                         break;
@@ -70,19 +75,20 @@ public class Main {
     }
 
     public static void createXMLFile() {
+
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.newDocument();
+            Document document = dBuilder.newDocument();
 
             // Root element
-            Element rootElement = doc.createElement("Exams");
-            doc.appendChild(rootElement);
+            Element rootElement = document.createElement("Exams");
+            document.appendChild(rootElement);
 
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(doc);
+            DOMSource source = new DOMSource(document);
             StreamResult result = new StreamResult(new File(filePath));
             transformer.transform(source, result);
 
@@ -92,13 +98,15 @@ public class Main {
     }
 
     public static void addExamQuestion() {
+        Scanner scanner = new Scanner(System.in);
+
         List<String> optionList = new ArrayList<>();
         System.out.println("==========================");
         System.out.println("++Add an Exam Question Mode++");
         System.out.println("==========================");
         // Scan Question
         System.out.println("Enter the question: ");
-        String question = scanner.nextLine();
+        String question = scanner.next();
         // Scan option
         // Ask how many option for that question and scan and add the options to the list
         System.out.println("How many answer options for this question? ");
@@ -117,24 +125,26 @@ public class Main {
         addDataToXML(question, optionList, answer);
     }
 
-    public static void deleteQuestion(List<Exam> exam){
+    public static void deleteQuestion(List<Exam> exams){
+        Scanner scanner = new Scanner(System.in);
+        printQuestionToConsole(exams);
+        System.out.println("Which question need to to delete? [Enter Question Number]: ");
+        int deleteNumber = scanner.nextInt();
+        int temp = deleteNumber-1;
         try{
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setValidating(false);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-
-            Document doc = db.parse(new FileInputStream(new File(filePath)));
-
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder;
+            Document document;
+            dbFactory.setValidating(false);
+            dBuilder = dbFactory.newDocumentBuilder();
+            document = dBuilder.parse(new FileInputStream(new File(filePath)));
             // retrieve the element
-
-            Element element = (Element) doc.getElementsByTagName("Details").item(0);
-
+            Element element = (Element) document.getElementsByTagName("Details").item(temp);
             // remove the specific node
             element.getParentNode().removeChild(element);
-
             // Normalize the DOM tree
-            doc.normalize();
-            DOMSource source = new DOMSource(doc);
+            document.normalize();
+            DOMSource source = new DOMSource(document);
             Transformer tf = TransformerFactory.newInstance().newTransformer();
             StreamResult result = new StreamResult(filePath);
             tf.transform(source, result);
@@ -147,9 +157,10 @@ public class Main {
     public static void addDataToXML(String questionInput, List<String> optionInput, String answerInput) {
 
         try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(filePath);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document document = dBuilder.parse(filePath);
+
             Element root = document.getDocumentElement();
             Element rootElement = document.getDocumentElement();
 
@@ -188,14 +199,14 @@ public class Main {
 
 
     public static void parseXMLtoObject(List<Exam> exams) {
-        File xmlFile = new File(filePath);
         List<String> options;
-        // Get Document Builder
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder;
+
         try {
-            documentBuilder = factory.newDocumentBuilder();
-            Document document = documentBuilder.parse(xmlFile);
+             //Get Document Builder
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();;
+            Document document = dBuilder.parse(new File(filePath));;
+
             NodeList nodeList = document.getElementsByTagName("Details");
             NodeList nOptionList = null;
 
@@ -224,12 +235,11 @@ public class Main {
     public static void printExamToPDF(List<Exam> exams) {
         String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/Exam.pdf";
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-
         try {
             PdfWriter.getInstance(document, new FileOutputStream(dest));
             // Open
             document.open();
-
+            // Setup font for exam title
             Font titleFront = new Font();
             titleFront.setStyle(Font.BOLD);
             titleFront.setSize(20);
@@ -281,11 +291,10 @@ public class Main {
             PdfWriter.getInstance(document, new FileOutputStream(dest));
             // Open
             document.open();
-
+            // Setup font for exam title
             Font titleFront = new Font();
             titleFront.setStyle(Font.BOLD);
             titleFront.setSize(20);
-
             // Create Exam Title
             Paragraph examTitle = new Paragraph("Java Exam and Answer",titleFront);
             examTitle.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
@@ -303,7 +312,6 @@ public class Main {
                 document.add(new Paragraph("Answer: "+list.getAnswer()));
                 document.add(Chunk.NEWLINE);
             }
-
             // Close
             document.close();
             System.out.println("Exam Answer PDF File Created");
@@ -324,7 +332,7 @@ public class Main {
         System.out.println("Enter Your Option: ");
     }
 
-    // Testing
+    // For Testing
     public static void printQuestionToConsole(List<Exam> exams) {
         for (Exam quiz : exams) {
             System.out.println(quiz.toString());
