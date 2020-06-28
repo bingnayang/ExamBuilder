@@ -17,12 +17,13 @@
     </Details>
     <Details>
         <id>3</id>
-        <question>The maximum number of elements that must be examined to complete a binary search in an array of 200 element is</question>
+        <question>The maximum number of elements that must be examined to complete a binary search in an array of 200
+            element is
+        </question>
         <option>200</option>
         <option>8</option>
         <option>1</option>
         <option>13</option>
         <answer>B</answer>
     </Details>
-    
 </Exams>

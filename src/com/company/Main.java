@@ -40,21 +40,21 @@ public class Main {
                 int selectMenu = scanner.nextInt();
                 switch (selectMenu){
                     case 1:
-                        System.out.println("1. Add an Exam Question");
-                        addExamQuestion();
+                        System.out.println("Add an Exam Question");
+                        addExamQuestion(examsList);
                         parseXMLtoObject(examsList);
                         break;
                     case 2:
-                        System.out.println("2. Delete an Exam Question");
+                        System.out.println("Delete an Exam Question");
                         deleteQuestion(examsList);
                         parseXMLtoObject(examsList);
                         break;
                     case 3:
-                        System.out.println("3. Print Exam to PDF File");
+                        System.out.println("Print Exam to PDF File");
                         printExamToPDF(examsList);
                         break;
                     case 4:
-                        System.out.println("4. Print Exam Questions and Answer to PDF File");
+                        System.out.println("Print Exam Questions and Answer to PDF File");
                         printExamAndAnswerToPDF(examsList);
                         break;
                     case 5:
@@ -97,16 +97,16 @@ public class Main {
         }
     }
 
-    public static void addExamQuestion() {
+    public static void addExamQuestion(List<Exam> exams){
         Scanner scanner = new Scanner(System.in);
-
         List<String> optionList = new ArrayList<>();
         System.out.println("==========================");
         System.out.println("++Add an Exam Question Mode++");
         System.out.println("==========================");
         // Scan Question
         System.out.println("Enter the question: ");
-        String question = scanner.next();
+        String question = scanner.nextLine();
+;
         // Scan option
         // Ask how many option for that question and scan and add the options to the list
         System.out.println("How many answer options for this question? ");
@@ -122,7 +122,7 @@ public class Main {
         String answer = scanner.next();
 
         // Add exam question, option, and answer to XML file
-        addDataToXML(question, optionList, answer);
+        addDataToXML(question, optionList, answer,exams);
     }
 
     public static void deleteQuestion(List<Exam> exams){
@@ -154,8 +154,8 @@ public class Main {
         }
     }
 
-    public static void addDataToXML(String questionInput, List<String> optionInput, String answerInput) {
-
+    public static void addDataToXML(String questionInput, List<String> optionInput, String answerInput, List<Exam> exams) {
+        int getLastID = exams.size()+1;
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -163,12 +163,10 @@ public class Main {
 
             Element root = document.getDocumentElement();
             Element rootElement = document.getDocumentElement();
-
             Element detail = document.createElement("Details");
             rootElement.appendChild(detail);
-
             Element id = document.createElement("id");
-            id.appendChild(document.createTextNode(Integer.toString(1)));
+            id.appendChild(document.createTextNode(Integer.toString(getLastID)));
             detail.appendChild(id);
 
             Element question = document.createElement("question");

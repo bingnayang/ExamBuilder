@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Exams>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Exams>
     <Details>
         <id>1</id>
         <question>True/False: The base 2 logarithm of 100 is 2</question>
@@ -18,16 +17,14 @@
     </Details>
     <Details>
         <id>3</id>
-        <question>The maximum number of elements that must be examined to complete a binary search in an array of 200 element is</question>
+        <question>The maximum number of elements that must be examined to complete a binary search in an array of 200
+            element is
+        </question>
         <option>200</option>
         <option>8</option>
         <option>1</option>
         <option>13</option>
         <answer>B</answer>
     </Details>
-    <Details>
-        <id>1</id>
-        <question>adlskfj____</question>
-        <answer>100</answer>
-    </Details>
-</Exams>
+
+<Details><id>4</id><question>How asjdhf___ hjahdsf__</question><answer>good</answer></Details></Exams>
