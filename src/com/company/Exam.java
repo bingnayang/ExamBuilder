@@ -51,7 +51,7 @@ public class Exam {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return question;
     }
 
