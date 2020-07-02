@@ -23,11 +23,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-//    static Scanner scanner = new Scanner(System.in);
     static String filePath = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/ExamBuilder.xml";
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         List<Exam> examsList = new ArrayList<>();
         try {
             // Check if ExamBuilder.xml file existed, if not create the xml file
@@ -36,34 +34,39 @@ public class Main {
             if (fileTesting.exists()) {
 //                System.out.println("XML file already exist");
                 parseXMLtoObject(examsList);
-                startingMenu();
-                int selectMenu = scanner.nextInt();
-                switch (selectMenu){
-                    case 1:
-                        System.out.println("Add an Exam Question");
-                        addExamQuestion(examsList);
-                        parseXMLtoObject(examsList);
-                        break;
-                    case 2:
-                        System.out.println("Delete an Exam Question");
-                        deleteQuestion(examsList);
-                        parseXMLtoObject(examsList);
-                        break;
-                    case 3:
-                        System.out.println("Print Exam to PDF File");
-                        printExamToPDF(examsList);
-                        break;
-                    case 4:
-                        System.out.println("Print Exam Questions and Answer to PDF File");
-                        printExamAndAnswerToPDF(examsList);
-                        break;
-                    case 5:
-                        System.out.println("Exit");
-                        break;
-                    default:
-                        System.out.println("Not an option");
-                        break;
-                }
+                int selectMenu;
+                do{
+                    startingMenu();
+                    Scanner scanner = new Scanner(System.in);
+                    selectMenu = scanner.nextInt();
+                    switch (selectMenu){
+                        case 1:
+                            System.out.println("Add an Exam Question");
+                            addExamQuestion(examsList);
+                            parseXMLtoObject(examsList);
+                            break;
+                        case 2:
+                            System.out.println("Delete an Exam Question");
+                            deleteQuestion(examsList);
+                            parseXMLtoObject(examsList);
+                            break;
+                        case 3:
+                            System.out.println("Print Exam to PDF File");
+                            printExamToPDF(examsList);
+                            break;
+                        case 4:
+                            System.out.println("Print Exam Questions and Answer to PDF File");
+                            printExamAndAnswerToPDF(examsList);
+                            break;
+                        case 5:
+                            System.out.println("Exit");
+                            break;
+                        default:
+                            System.out.println("Not an option");
+                            break;
+                    }
+                }while (selectMenu != 5);
+
             } else {
                 System.out.println("XML file creating....");
                 createXMLFile();
