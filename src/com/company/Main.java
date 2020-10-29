@@ -234,7 +234,7 @@ public class Main {
     }
 
     public static void printExamToPDF(List<Exam> exams) {
-        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/Exam.pdf";
+        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/pdf/Exam.pdf";
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
         try {
             PdfWriter.getInstance(document, new FileOutputStream(dest));
@@ -285,7 +285,7 @@ public class Main {
     }
 
     public static void printExamAndAnswerToPDF(List<Exam> exams){
-        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/com/company/ExamAnswer.pdf";
+        String dest = "/Users/Bing/Documents/GitHub/BingnaYang.github.io/ExamBuilder/src/pdf/ExamAnswer.pdf";
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
 
         try {
